@@ -1,0 +1,74 @@
+import tkinter as tk
+from tkinter import font
+from gpiozero import LED
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BCM)
+
+led_blue = LED(14)
+led_green = LED(15)
+led_yellow = LED(18)
+
+win = tk.Tk()
+win.title('LED Control')
+
+myFont = font.Font(family='Helvetica', size=12, weight='bold')
+
+def turn_off_other_leds(selected_led):
+    if selected_led != led_blue:
+        led_blue.off()
+        blueButton.config(text='Blue LED OFF')
+    if selected_led != led_green:
+        led_green.off()
+        greenButton.config(text='Green LED OFF')
+    if selected_led != led_yellow:
+        led_yellow.off()
+        yellowButton.config(text='Yellow LED OFF')
+
+def toggle_blue():
+    if led_blue.is_lit:
+        led_blue.off()
+        blueButton.config(text='Blue LED OFF')
+    else:
+        led_blue.on()
+        blueButton.config(text='Blue LED ON')
+        turn_off_other_leds(led_blue)
+
+def toggle_green():
+    if led_green.is_lit:
+        led_green.off()
+        greenButton.config(text='Green LED OFF')
+    else:
+        led_green.on()
+        greenButton.config(text='Green LED ON')
+        turn_off_other_leds(led_green)
+
+def toggle_yellow():
+    if led_yellow.is_lit:
+        led_yellow.off()
+        yellowButton.config(text='Yellow LED OFF')
+    else:
+        led_yellow.on()
+        yellowButton.config(text='Yellow LED ON')
+        turn_off_other_leds(led_yellow)
+
+def close():
+    GPIO.cleanup()
+    win.destroy()
+
+
+
+
+blueButton = tk.Button(win, text='Blue LED OFF', font=myFont, command=toggle_blue, width=12)
+blueButton.grid(row=0, column=0, padx=10, pady=5)
+
+greenButton = tk.Button(win, text='Green LED OFF', font=myFont, command=toggle_green, width=12)
+greenButton.grid(row=1, column=0, padx=10, pady=5)
+
+yellowButton = tk.Button(win, text='Yellow LED OFF', font=myFont, command=toggle_yellow, width=12)
+yellowButton.grid(row=2, column=0, padx=10, pady=5)
+
+exitButton = tk.Button(win, text='Exit', font=myFont, command=close, bg='red', height=1, width=6)
+exitButton.grid(row=3, column=0, padx=10, pady=10)
+
+win.mainloop()
